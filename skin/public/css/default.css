@@ -1,0 +1,110 @@
+@import "prettify.css";
+
+.clearfix {
+    clear: both;
+}
+
+html {
+    background: #1c1c1c url(/img/bg.tile.jpg);
+    color: white;
+}
+
+a {
+    color: #222222;
+}
+
+a:hover {
+    color: #999999;
+}
+
+body {
+    background: url(/img/bg.jpg) 50% 0 no-repeat;
+    color: #333333;
+    min-height: 600px;
+    padding: 0 10px;
+}
+
+#container {
+    margin: 0px auto;
+    width: 800px;
+}
+
+#header {
+    padding-top: 20px;
+    color: white;
+    font-size: 40px;
+    font-family: Serial;
+    margin: 0 0 10px 15px;
+}
+
+#header a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#main {
+    width: 500px;
+    float: left;
+}
+
+#main .date {
+    float: right;
+}
+
+#main .article {
+    background-color: white;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+#main .article .readmore {
+    margin-top: 10px;
+}
+
+#main .article .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#sidebar {
+    float: right;
+    width: 250px;
+    background: white;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+#footer {
+    padding-top: 30px;
+    clear: both;
+    text-align: center;
+    color: #8b8b8b;
+}
+
+#sidebar #author h1 {
+    font-size: 16px;
+}
+
+#sidebar #author img {
+    width: 130px;
+    margin: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+#sidebar #author ul {
+    list-style-position:inside;
+}
+
+#sidebar #author li {
+    list-style: disc;
+    list-style-position:inside;
+}

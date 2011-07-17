@@ -1,0 +1,14 @@
+#main
+  :each article in articles.slice(0,15)
+    .article
+      .date{title: article.date}&= formatDate(article.date, "%Y-%m-%d")
+      %div.title
+        %a{href: "/" + article.name}&= article.title
+      %p
+        = intro(article.markdown)
+      .readmore
+        %a{href: "/" + article.name} Read more...
+
+#sidebar
+  #author
+    = markdownEncode(description)
