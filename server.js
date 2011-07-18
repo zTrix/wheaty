@@ -36,6 +36,7 @@ var log = function(req, res, next) {
 
 http.createServer(chain(
     log,
-    require('wheat')(__dirname)
+    require('./wheaty/wheaty')(__dirname)
 )).listen(80);
+
 
