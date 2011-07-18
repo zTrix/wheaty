@@ -123,7 +123,7 @@ function activateSnippets(version, snippets, canExecute, callback) {
       }
       var group = this.group();
       snippets.forEach(function (snippet) {
-        Git.readFile(version, "articles/" + snippet.filename, group());
+        Git.readFile(version, "articles/" + snippet.filename, 'utf-8', group());
       });
     },
     function (err, files) {
@@ -181,7 +181,7 @@ var Data = module.exports = {
           filename = path.substr(0, match.index);
         }
         url = "/" + (version === "fs" ? "" : version + "/") + filename;
-        Git.readFile(version, "articles/" + filename, this);
+        Git.readFile(version, "articles/" + filename, 'utf-8', this);
       },
       function (err, code) {
         if (err) { error(err); return; }
@@ -208,7 +208,7 @@ var Data = module.exports = {
     var props;
     Step(
       function getArticleMarkdown() {
-        Git.readFile(version, Path.join("articles", name + ".markdown"), this);
+        Git.readFile(version, Path.join("articles", name + ".markdown"), 'utf-8', this);
       },
       function (err, markdown) {
         if (err) { callback(err); return; }
@@ -286,7 +286,7 @@ var Data = module.exports = {
           callback(new Error("name is required"));
           return;
         }
-        Git.readFile(version, Path.join("authors", name + ".markdown"), this);
+        Git.readFile(version, Path.join("authors", name + ".markdown"), 'utf-8', this);
       },
       function process(err, markdown) {
         if (err) { callback(err); return; }
