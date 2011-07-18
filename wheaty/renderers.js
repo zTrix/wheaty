@@ -1,4 +1,4 @@
-var Git = require('git-fs'),
+var Git = require('./git-fs'),
     Data = require('./data'),
     Tools = require('./tools'),
     Buffer = require('buffer').Buffer,
@@ -54,7 +54,7 @@ function postProcess(headers, buffer, version, path, callback) {
       }
       var date = new Date().toUTCString();
       headers["Date"] = date;
-      headers["Server"] = "Wheat (node.js)";
+      headers["Server"] = "Wheaty on node.js";
       if (version === 'fs') {
         delete headers["Cache-Control"];
       } else {
@@ -108,15 +108,15 @@ var Renderers = module.exports = {
       function loadData(err, head) {
         if (err) { callback(err); return; }
         Data.articles(version, this.parallel());
-        Git.readFile(head, "description.markdown", this.parallel());
-				Data.categories(version, this.parallel());
+        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
+        Data.categories(version, this.parallel());
       },
       function applyTemplate(err, articles, description, categories) {
         if (err) { callback(err); return; }
         Tools.render("index", {
           articles: articles,
           description: description,
-					categories: categories
+          categories: categories
         }, this);
       },
       function callPostProcess(err, buffer) {
@@ -174,7 +174,7 @@ var Renderers = module.exports = {
         if (err) { callback(err); return; }
         article = props;
         insertSnippets(article.markdown, article.snippets, this.parallel());
-        Git.readFile(head, "description.markdown", this.parallel());
+        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
       },
       function applyTemplate(err, markdown, description) {
         if (err) { callback(err); return; }
@@ -204,8 +204,8 @@ var Renderers = module.exports = {
       function loadData(err, head) {
         if (err) { callback(err); return; }
         Data.articles(version, this.parallel());
-        Git.readFile(head, "description.markdown", this.parallel());
-				Data.categories(version, this.parallel());
+        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
+        Data.categories(version, this.parallel());
       },
       function applyTemplate(err, articles, description, categories) {
         if (err) { callback(err); return; }
@@ -213,11 +213,10 @@ var Renderers = module.exports = {
         var articlesForCategory = articles.reduce(function (start, element){
           return element.categories && element.categories.indexOf(category) >= 0 ? start.concat(element) : start;
         }, []);
-								
         Tools.render("index", {
           articles: articlesForCategory,
           description: description,
-					categories: categories
+          categories: categories
         }, this);
       },
       function callPostProcess(err, buffer) {
@@ -237,7 +236,7 @@ var Renderers = module.exports = {
       },
       function loadArticleFiles(err, data) {
         if (err) {
-          Git.readFile(version, "articles/" + path, this);
+          Git.readFile(version, "articles/" + path, 'utf-8', this);
         }
         return data;
       },
@@ -262,7 +261,7 @@ var Renderers = module.exports = {
       },
       function loadArticleFiles(err, data) {
         if (err) {
-          Git.readFile(version, "articles/" + path, this);
+          Git.readFile(version, "articles/" + path, 'utf-8', this);
         }
         return data;
       },
