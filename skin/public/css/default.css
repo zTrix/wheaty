@@ -44,15 +44,16 @@ body {
 }
 
 #main {
-    width: 500px;
+    width: 520px;
     float: left;
+    min-height: 800px;
 }
 
 #main .date {
     float: right;
 }
 
-#main .article {
+#main .intro, #main .article {
     background-color: white;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -61,11 +62,11 @@ body {
     padding: 15px;
 }
 
-#main .article .readmore {
+#main .intro .readmore {
     margin-top: 10px;
 }
 
-#main .article .title {
+#main .intro .title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -73,7 +74,7 @@ body {
 
 #sidebar {
     float: right;
-    width: 250px;
+    width: 210px;
     background: white;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -107,4 +108,13 @@ body {
 #sidebar #author li {
     list-style: disc;
     list-style-position:inside;
+}
+
+#main #disqus_thread {
+    margin-top: 50px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding: 15px;
+    background-color: white;
 }

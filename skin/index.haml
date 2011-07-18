@@ -1,6 +1,6 @@
 #main
   :each article in articles.slice(0,15)
-    .article
+    .intro
       .date{title: article.date}&= formatDate(article.date, "%Y-%m-%d")
       %div.title
         %a{href: "/" + article.name}&= article.title
