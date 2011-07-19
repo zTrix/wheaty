@@ -6,9 +6,14 @@
         %a{href: "/" + article.name}&= article.title
       %p
         = intro(article.markdown)
+      .comment-cnt
+        %a(href="http://blog.ztrix.me/#{article.name}#disqus_thread" data-disqus-identifier="#{article.name}") comment
       .readmore
         %a{href: "/" + article.name} Read more...
 
 #sidebar
   #author
     = markdownEncode(description)
+
+%script(src="http://ztrix-blog.disqus.com/count.js" async type="text/javascript")
+

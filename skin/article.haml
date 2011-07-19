@@ -8,26 +8,10 @@
     %hr{style:"clear:both"}
   #disqus_thread
   :script
-    var disqus_url = "http://blog.ztrix.me/#{article.name}";
+    var disqus_identifier = "#{article.name}",
+        disqus_shortname = 'ztrix-blog',
+        disqus_title = "#{article.name}";
   %script(src="http://ztrix-blog.disqus.com/embed.js" async type="text/javascript")
-  %a(href="http://disqus.com/forums/ztrix-blog/?url=ref")
-    View the discussion thread.
-  %a.dsq-brlink(href="http://disqus.com")
-    blog comments powered by
-    %span.logo-disqus
-      Disqus
-  :script
-    (function() {
-      var links = document.getElementsByTagName('a');
-      var query = '?';
-      for(var i = 0; i < links.length; i++) {
-        if(links[i].href.indexOf('#disqus_thread') >= 0) {
-          query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&amp;';
-        }
-      }
-      document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/ztrix-blog/get_num_replies.js' + query + '"></' + 'script>');
-    })();
-
 
 #sidebar
-  .bubble= markdownEncode(description)
+  #author= markdownEncode(description)
