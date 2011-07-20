@@ -1,5 +1,7 @@
 var Step = require('step'),
     Haml = require('haml'),
+    Path = require('path'),
+    Config = require('./config'),
     Markdown = require('./markdown'),
     MD5 = require('./md5'),
     Buffer = require('buffer').Buffer,
@@ -124,7 +126,7 @@ function stringToBuffer(string) {
 var loadTemplate = Git.safe(function loadTemplate(version, name, callback) {
   Step(
     function loadHaml() {
-      Git.readFile(version, "skin/" + name + ".haml", this);
+      Git.readFile(version, Path.join(Config.skin_dir, name + ".haml"), this);
     },
     function compileTemplate(err, haml) {
       if (err) { callback(err); return; }
@@ -174,7 +176,8 @@ function render(name, data, callback, partial) {
       if (partial) { return stringToBuffer(content); }
       data = {
         content: content,
-        title: data.title || ""
+        title: data.title || "",
+        config: Config
       };
       data.__proto__ = Helpers;
       return stringToBuffer(layout(data));

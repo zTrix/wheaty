@@ -24,8 +24,9 @@ require.paths.unshift(__dirname);
 
 require('proto');
 var Url = require('url'),
-    Git = require('git-fs'),
-    Renderers = require('renderers');
+    Git = require('./git-fs'),
+    Config = require('./config'),
+    Renderers = require('./renderers');
 
 var routes = [];
 
@@ -33,12 +34,12 @@ function addRoute(regex, renderer) {
   routes.push({regex: regex, renderer: renderer});
 }
 
-function handleRoute(req, res, next, renderer, match) {
+function handleRoute(req, res, renderer, match) {
   function callback(err, data) {
     if (err) {
       return err.errno === process.ENOENT
-        ? next()
-        : next(err);
+        ? res.writeHead(404)
+        : res.writeHead(500);
     }
     res.writeHead(200, data.headers);
     res.end(data.buffer);
@@ -46,7 +47,11 @@ function handleRoute(req, res, next, renderer, match) {
   renderer.apply(null, match.concat([callback]));
 }
 
-module.exports = function setup(repo) {
+module.exports = function setup(repo, config) {
+  
+  for (var i in config) {
+    Config[i] = config[i];
+  }
 
   // Initialize the Git Filesystem
   Git(repo || process.cwd());
@@ -62,7 +67,7 @@ module.exports = function setup(repo) {
   addRoute(/^\/()category\/([\%\.a-z0-9_-]+)$/,  Renderers.categoryIndex);
 
 
-  return function handle(req, res, next) {
+  return function handle(req, res) {
     var url = Url.parse(req.url);
     for (var i = 0, l = routes.length; i < l; i++) {
       var route = routes[i];
@@ -74,14 +79,13 @@ module.exports = function setup(repo) {
           Git.getHead(function (err, sha) {
             if (err) { throw err; }
             match[0] = sha;
-            handleRoute(req, res, next, route.renderer, match);
+            handleRoute(req, res, route.renderer, match);
           });
         } else {
-          handleRoute(req, res, next, route.renderer, match);
+          handleRoute(req, res, route.renderer, match);
         }
         return;
       }
     }
-    next();
   }
 };

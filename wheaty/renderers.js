@@ -1,5 +1,7 @@
 var Git = require('./git-fs'),
+    Path = require('path'),
     Data = require('./data'),
+    Config = require('./config'),
     Tools = require('./tools'),
     Buffer = require('buffer').Buffer,
     Prettify = require('./prettify'),
@@ -50,7 +52,7 @@ function postProcess(headers, buffer, version, path, callback) {
   Step(
     function buildHeaders() {
       if (!headers["Content-Type"]) {
-        headers["Content-Type"] = "text/html; charset=utf-8";
+        headers["Content-Type"] = "text/html; charset=" + Config.encoding;
       }
       var date = new Date().toUTCString();
       headers["Date"] = date;
@@ -108,7 +110,7 @@ var Renderers = module.exports = {
       function loadData(err, head) {
         if (err) { callback(err); return; }
         Data.articles(version, this.parallel());
-        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
+        Git.readFile(head, Config.description_file, Config.encoding, this.parallel());
         Data.categories(version, this.parallel());
       },
       function applyTemplate(err, articles, description, categories) {
@@ -116,7 +118,8 @@ var Renderers = module.exports = {
         Tools.render("index", {
           articles: articles,
           description: description,
-          categories: categories
+          categories: categories,
+          config: Config
         }, this);
       },
       function callPostProcess(err, buffer) {
@@ -149,7 +152,8 @@ var Renderers = module.exports = {
           articles[i].markdown = markdown;
         });
         Tools.render("feed.xml", {
-          articles: articles
+          articles: articles,
+          config: Config
         }, this, true);
       },
       function finish(err, buffer) {
@@ -174,7 +178,7 @@ var Renderers = module.exports = {
         if (err) { callback(err); return; }
         article = props;
         insertSnippets(article.markdown, article.snippets, this.parallel());
-        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
+        Git.readFile(head, Config.description_file, Config.encoding, this.parallel());
       },
       function applyTemplate(err, markdown, description) {
         if (err) { callback(err); return; }
@@ -183,7 +187,8 @@ var Renderers = module.exports = {
           title: article.title,
           article: article,
           author: article.author,
-          description: description
+          description: description,
+          config: Config
         }, this);
       },
       function finish(err, buffer) {
@@ -204,7 +209,7 @@ var Renderers = module.exports = {
       function loadData(err, head) {
         if (err) { callback(err); return; }
         Data.articles(version, this.parallel());
-        Git.readFile(head, "description.markdown", 'utf-8', this.parallel());
+        Git.readFile(head, Config.description_file, Config.encoding, this.parallel());
         Data.categories(version, this.parallel());
       },
       function applyTemplate(err, articles, description, categories) {
@@ -216,7 +221,8 @@ var Renderers = module.exports = {
         Tools.render("index", {
           articles: articlesForCategory,
           description: description,
-          categories: categories
+          categories: categories,
+          config: Config
         }, this);
       },
       function callPostProcess(err, buffer) {
@@ -232,11 +238,11 @@ var Renderers = module.exports = {
   staticFile: Git.safe(function staticFile(version, path, callback) {
     Step(
       function loadPublicFiles() {
-        Git.readFile(version, "skin/public/" + path, this);
+        Git.readFile(version, Path.join(Config.skin_dir, "public", path), this);
       },
       function loadArticleFiles(err, data) {
         if (err) {
-          Git.readFile(version, "articles/" + path, 'utf-8', this);
+          Git.readFile(version, Path.join(Config.article_dir, path), Config.encoding, this);
         }
         return data;
       },
@@ -257,11 +263,11 @@ var Renderers = module.exports = {
   dotFile: Git.safe(function dotFile(version, path, callback) {
     Step(
       function loadPublicFiles() {
-        Git.readFile(version, "skin/public/" + path, this);
+        Git.readFile(version, Path.join(Config.skin_dir, "public", path), this);
       },
       function loadArticleFiles(err, data) {
         if (err) {
-          Git.readFile(version, "articles/" + path, 'utf-8', this);
+          Git.readFile(version, Path.join(Config.article_dir, path), Config.encoding, this);
         }
         return data;
       },

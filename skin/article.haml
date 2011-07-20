@@ -9,9 +9,9 @@
   #disqus_thread
   :script
     var disqus_identifier = "#{article.name}",
-        disqus_shortname = 'ztrix-blog',
+        disqus_shortname = '#{config.disqus_shortname}',
         disqus_title = "#{article.name}";
-  %script(src="http://ztrix-blog.disqus.com/embed.js" async type="text/javascript")
+  %script(src="http://#{config.disqus_shortname}.disqus.com/embed.js" async type="text/javascript")
 
 #sidebar
   #author= markdownEncode(description)
