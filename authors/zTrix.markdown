@@ -4,4 +4,4 @@ Homepage: http://ztrix.me
 Twitter: zhuwl08
 Location: Beijing, China
 
-Student in Tsinghua University.
+Student in THU
