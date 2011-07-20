@@ -25,6 +25,7 @@ require.paths.unshift(__dirname);
 require('proto');
 var Url = require('url'),
     Git = require('./git-fs'),
+    Path = require('path'),
     Config = require('./config'),
     Renderers = require('./renderers');
 
@@ -52,6 +53,11 @@ module.exports = function setup(repo, config) {
   for (var i in config) {
     Config[i] = config[i];
   }
+  Config['skin_dir'] = Path.normalize(Path.join(
+    require('tools').relative_path(repo, Config.wheaty_dir),
+    '..',
+    Config.skin_dir
+  ));
 
   // Initialize the Git Filesystem
   Git(repo || process.cwd());

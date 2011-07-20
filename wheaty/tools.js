@@ -186,8 +186,18 @@ function render(name, data, callback, partial) {
   )
 }
 
+function relative_path (father, child) {
+    father = Path.normalize(father);
+    child = Path.normalize(child);
+    if (child.indexOf(father) == 0) {
+        return child.substr(father.length);
+    }
+    return null;
+};
+
 module.exports = {
   stringToBuffer: stringToBuffer,
   compileTemplate: compileTemplate,
-  render: render
+  render: render,
+  relative_path: relative_path
 };

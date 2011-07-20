@@ -1,16 +1,16 @@
 {
   "name": "wheaty",
-  "description": "wheat powered personal blog",
+  "description": "Git powered node.js blog engine derived from wheat",
   "tags": ["git","node","wheat","blog"],
   "version": "0.0.1",
   "author": "zTrix <i@ztrix.me>",
   "repository": {
     "type": "git",
-    "url": "http://github.com/ztrix/wheaty.git"
+    "url": "http://github.com/zTrix/wheaty.git"
   },
-  "bugs": "http://github.com/creationix/wheat/issues",
+  "bugs": "http://github.com/zTrix/wheaty/issues",
   "engines": ["node >= 0.4.0"],
-  "main": "server.js",
+  "main": "wheaty/wheaty.js",
   "dependencies": {
     "simple-mime": ">=0.0.1",
     "haml": ">=0.2.5",

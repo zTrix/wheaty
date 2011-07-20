@@ -36,10 +36,6 @@ var config = {
     // or introduce yourself
     description_file: 'description.markdown',
 
-    // skin dir, which contains the haml, css, img, javascript files
-    skin_dir: 'skin',
-    //skin_dir: 'skins',
-
     // article encoding, it is strongly recommended to use utf-8 as
     // your article encoding
     // other encoding is not tested
@@ -48,10 +44,9 @@ var config = {
     // google analytic account
     ga_account: 'UA-10996727-4',
 
-    // you need not to care about this line
-    // it's only used to keep the last comma
-    // above
-    _nothing: ''
+    // The following line is only used to 
+    // keep the last comma above
+    ____: ''
 };
 
 
