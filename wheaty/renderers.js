@@ -7,7 +7,7 @@ var Git = require('./git-fs'),
     Prettify = require('./prettify'),
     MD5 = require('./md5'),
     ChildProcess = require('child_process'),
-    getMime = require('simple-mime')('application/octet-string'),
+    getMime = require('./simple-mime')('application/octet-string'),
     Step = require('step');
 
 // Execute a child process, feed it a buffer and get a new buffer filtered.
