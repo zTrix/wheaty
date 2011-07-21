@@ -3,7 +3,7 @@
     .intro
       .date{title: article.date}&= formatDate(article.date, "%Y-%m-%d")
       %div.title
-        %a{href: "/blog/" + article.name}&= article.title
+        %a{href: "/" + article.name}&= article.title
       %p
         = intro(article.markdown)
       .comment-cnt

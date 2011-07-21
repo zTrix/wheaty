@@ -68,10 +68,10 @@ module.exports = function setup(repo, config) {
   // Set up our routes
   addRoute(/^\/()$/, Renderers.index);
   addRoute(/^\/()feed.xml$/, Renderers.feed);
-  addRoute(/^\/blog\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
+  addRoute(/^\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
   addRoute(/^\/([a-f0-9]{40})\/(.+\.dot)$/, Renderers.dotFile);
   addRoute(/^\/([a-f0-9]{40})\/(.+\.[a-z]{2,4})$/, Renderers.staticFile);
-  addRoute(/^\/blog\/()([a-z0-9_-]+)$/, Renderers.article);
+  addRoute(/^\/()([a-z0-9_-]+)$/, Renderers.article);
   addRoute(/^\/()(.+\.dot)$/, Renderers.dotFile);
   addRoute(/^\/()(.+\.[a-z]{2,4})$/, Renderers.staticFile);
   addRoute(/^\/()category\/([\%\.a-z0-9_-]+)$/,  Renderers.categoryIndex);
@@ -97,5 +97,9 @@ module.exports = function setup(repo, config) {
         return;
       }
     }
+    // TODO need careful handling later
+    res.writeHead(404);
+    res.write('not found');
+    res.end();
   }
 };
