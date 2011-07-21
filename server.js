@@ -25,12 +25,13 @@ var config = {
 
     // article dir
     article_dir: 'articles',
-    //article_dir: 'art',
 
     // authors dir, you should not change this if you are running
     // a personal blog
     author_dir: 'authors',
-    //author_dir: 'aut',
+
+    // skin dir which contains haml, css, javascript, img
+    skin_dir: 'skin',
 
     // This is the description file in which you describe your blog
     // or introduce yourself

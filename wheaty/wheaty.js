@@ -53,11 +53,15 @@ module.exports = function setup(repo, config) {
   for (var i in config) {
     Config[i] = config[i];
   }
+  /*
+  // if we want to lookup the skin dir relative to wheaty dir
+  // use the code below
   Config['skin_dir'] = Path.normalize(Path.join(
     require('tools').relative_path(repo, Config.wheaty_dir),
     '..',
     Config.skin_dir
   ));
+  */
 
   // Initialize the Git Filesystem
   Git(repo || process.cwd());
