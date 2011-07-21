@@ -242,7 +242,7 @@ var Renderers = module.exports = {
       },
       function loadArticleFiles(err, data) {
         if (err) {
-          Git.readFile(version, Path.join(Config.article_dir, path), Config.encoding, this);
+          Git.readFile(version, Path.join(Config.article_dir, path), 'binary', this);
         }
         return data;
       },
@@ -284,5 +284,9 @@ var Renderers = module.exports = {
       },
       callback
     );
+  }),
+
+  errorHandle: Git.safe(function(version, err) {
+    
   })
 }

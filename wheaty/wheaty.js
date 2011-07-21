@@ -87,7 +87,9 @@ module.exports = function setup(repo, config) {
         if (match[0] === '') {
           // Resolve head to a sha if unspecified
           Git.getHead(function (err, sha) {
-            if (err) { throw err; }
+            if (err) {
+                throw err; 
+            }
             match[0] = sha;
             handleRoute(req, res, route.renderer, match);
           });

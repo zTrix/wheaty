@@ -26,7 +26,7 @@ body {
 
 #container {
     margin: 0px auto;
-    width: 800px;
+    width: 830px;
 }
 
 #header {
@@ -44,7 +44,7 @@ body {
 }
 
 #main {
-    width: 520px;
+    width: 560px;
     float: left;
     min-height: 800px;
 }
@@ -60,6 +60,10 @@ body {
     -webkit-border-radius: 10px;
     margin-top: 20px;
     padding: 15px;
+}
+
+#main .article img {
+    max-width: 100%;
 }
 
 #main .intro .readmore {

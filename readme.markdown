@@ -14,6 +14,11 @@ Are you a geek? And still using wordpress as your personal blog? You are totally
 ## note
 * wheaty uses utf-8 as its default encoding, and it's strongly recommended to use utf-8. Though it's designed to support other encodings, but not enough tests have been done.
 
+## FAQ
+* If you are testing code under local environment, and the disqus comment module won't load, try adding the following code in article.haml in the script
+    var disqus_developer = 1;
+
+
 ## License
 Wheaty is [licensed] under the [MIT License]
 
