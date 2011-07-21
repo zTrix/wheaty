@@ -8,7 +8,6 @@ Are you a geek? And still using wordpress as your personal blog? You are totally
 ## how to install
     git clone git://github.com/zTrix/wheaty.git wheaty
     cd wheaty
-    npm install -d
     git pack-refs --all
     node server.js
 
