@@ -13,7 +13,6 @@
   "main": "wheaty/wheaty.js",
   "dependencies": {
     "haml": ">=0.2.5",
-    "step": ">=0.0.3",
     "proto": ">=0.1.0"
   }
 }

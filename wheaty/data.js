@@ -1,6 +1,6 @@
-var Git = require('git-fs'),
+var Git = require('./git-fs'),
     Path = require('path'),
-    Step = require('step'),
+    Step = require('./step'),
     Config = require('./config'),
     util = require(process.binding('natives').util ? 'util' : 'sys'),
     Script = process.binding('evals').Script,

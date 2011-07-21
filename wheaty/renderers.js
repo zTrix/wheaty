@@ -8,7 +8,7 @@ var Git = require('./git-fs'),
     MD5 = require('./md5'),
     ChildProcess = require('child_process'),
     getMime = require('./simple-mime')('application/octet-string'),
-    Step = require('step');
+    Step = require('./step');
 
 // Execute a child process, feed it a buffer and get a new buffer filtered.
 function execPipe(command, args, data, callback) {

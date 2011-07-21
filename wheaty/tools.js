@@ -1,4 +1,4 @@
-var Step = require('step'),
+var Step = require('./step'),
     Haml = require('haml'),
     Path = require('path'),
     Config = require('./config'),
