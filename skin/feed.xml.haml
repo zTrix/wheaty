@@ -10,9 +10,9 @@
     :each article in articles
       %item
         %title&= article.title
-        %link&= "http://" + config.base_url + "/" + article.name
-        %comments&= "http://" + config.base_url + "/" + article.name + "#disqus_thread"
+        %link&= "http://" + config.base_url + "/blog/" + article.name
+        %comments&= "http://" + config.base_url + "/blog/" + article.name + "#disqus_thread"
         %pubDate&= formatRFC822Date(article.date)
-        %guid(isPermaLink="true")&= "http://" + config.base_url + "/" + article.name
+        %guid(isPermaLink="true")&= "http://" + config.base_url + "/blog/" + article.name
         %description&= markdownEncode(article.markdown)
         %author&= article.author && (article.author.email + " (" + article.author.name + ")")

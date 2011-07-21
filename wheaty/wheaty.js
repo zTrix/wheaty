@@ -64,10 +64,10 @@ module.exports = function setup(repo, config) {
   // Set up our routes
   addRoute(/^\/()$/, Renderers.index);
   addRoute(/^\/()feed.xml$/, Renderers.feed);
-  addRoute(/^\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
+  addRoute(/^\/blog\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
   addRoute(/^\/([a-f0-9]{40})\/(.+\.dot)$/, Renderers.dotFile);
   addRoute(/^\/([a-f0-9]{40})\/(.+\.[a-z]{2,4})$/, Renderers.staticFile);
-  addRoute(/^\/()([a-z0-9_-]+)$/, Renderers.article);
+  addRoute(/^\/blog\/()([a-z0-9_-]+)$/, Renderers.article);
   addRoute(/^\/()(.+\.dot)$/, Renderers.dotFile);
   addRoute(/^\/()(.+\.[a-z]{2,4})$/, Renderers.staticFile);
   addRoute(/^\/()category\/([\%\.a-z0-9_-]+)$/,  Renderers.categoryIndex);
