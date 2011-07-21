@@ -15,8 +15,12 @@ Are you a geek? And still using wordpress as your personal blog? You are totally
 ## note
 * wheaty uses utf-8 as its default encoding, and it's strongly recommended to use utf-8. Though it's designed to support other encodings, but not enough tests have been done.
 
+## License
+Wheaty is [licensed] under the [MIT License]
+
 ## Tags
  blog engine, node.js, git, markdown, geek, javascript
 
 [wheat]:https://github.com/creationix/wheat
-
+[licensed]:https://github.com/zTrix/wheaty/blob/master/LICENSE
+[MIT License]:http://creativecommons.org/licenses/MIT/

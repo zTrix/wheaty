@@ -22,7 +22,7 @@ SOFTWARE.
 
 require.paths.unshift(__dirname);
 
-require('proto');
+require('./proto');
 var Url = require('url'),
     Git = require('./git-fs'),
     Path = require('path'),

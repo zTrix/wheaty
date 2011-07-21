@@ -2,6 +2,7 @@
   "name": "wheaty",
   "description": "Git powered node.js blog engine derived from wheat",
   "tags": ["git","node","wheat","blog"],
+  "keywords": ["wheaty", "blog engine", "git"],
   "version": "0.0.1",
   "author": "zTrix <i@ztrix.me>",
   "repository": {
@@ -10,9 +11,8 @@
   },
   "bugs": "http://github.com/zTrix/wheaty/issues",
   "engines": ["node >= 0.4.0"],
-  "main": "wheaty/wheaty.js",
-  "dependencies": {
-    "haml": ">=0.2.5",
-    "proto": ">=0.1.0"
+  "main": "./wheaty/wheaty.js",
+  "bin": {
+    "wheaty": "./server.js"
   }
 }

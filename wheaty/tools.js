@@ -1,5 +1,5 @@
 var Step = require('./step'),
-    Haml = require('haml'),
+    Haml = require('./haml'),
     Path = require('path'),
     Config = require('./config'),
     Markdown = require('./markdown'),
