@@ -32,7 +32,7 @@ function log(msg, type, color) {
         color = color + 'm';
     }
     console.log(
-        [getTime(), ' [', head, color, type, foot, '] [', head, tag, getPos(), foot, '] ', msg].join('')
+        getTime() + ' [' + head + color + type + foot + '] [' + head + tag + getPos() + foot + ' ]', msg
     );
 }
 

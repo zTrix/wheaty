@@ -5,7 +5,8 @@ var Step = require('./step'),
     Markdown = require('./markdown'),
     MD5 = require('./md5'),
     Buffer = require('buffer').Buffer,
-    Git = require('git-fs');
+    Git = require('./git-fs'),
+    Z = require('./zlog');
 
 function pad(num, count) {
   count = count || 2;
@@ -163,24 +164,35 @@ function render(name, data, callback, partial) {
       Git.getHead(this);
     },
     function loadTemplates(err, version) {
-      if (err) { callback(err); return; }
+      if (err) {
+        Z.err(err.stack);
+        callback(err); 
+        return; 
+      }
       loadTemplate(version, name, this.parallel());
       if (!partial) {
         loadTemplate(version, "layout", this.parallel());
       }
     },
     function renderTemplates(err, template, layout) {
-      if (err) { callback(err); return; }
+      if (err) {
+        Z.err(err.stack);
+        callback(err); 
+        return; 
+      }
       data.__proto__ = Helpers;
       var content = template(data);
-      if (partial) { return stringToBuffer(content); }
+      if (partial) {
+        return stringToBuffer(content); 
+      }
       data = {
         content: content,
         title: data.title || "",
         config: Config
       };
       data.__proto__ = Helpers;
-      return stringToBuffer(layout(data));
+      var ret = stringToBuffer(layout(data));
+      return ret;
     },
     callback
   )

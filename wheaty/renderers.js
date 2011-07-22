@@ -198,9 +198,13 @@ var Renderers = module.exports = {
       },
       function finish(err, buffer) {
         if (err) { 
-          Z.err(err.toString());
+          Z.err(err.stack);
           callback(err); 
           return; 
+        }
+        if (!buffer) {
+          Z.warn('buffer is null');
+          return;
         }
         postProcess({
           "Cache-Control": "public, max-age=3600"

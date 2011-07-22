@@ -64,26 +64,36 @@ function Step() {
 
   // Add a special callback generator `this.parallel()` that groups stuff.
   next.parallel = function () {
-    var index = 1 + counter++;
+    var index = ++counter;
     pending++;
+    var fired_by_callback = false;
 
-    function check() {
+    function check(who) {
       if (pending === 0) {
+        if (who && fired_by_callback) return;
         // When they're all done, call the callback
         next.apply(null, results);
       }
     }
-    process.nextTick(check); // Ensures that check is called at least once
+    process.nextTick(function() {
+        check('nextTick');
+    }); // Ensures that check is called at least once
 
     return function () {
       pending--;
+      if (pending < 0) {
+        Z.err(["pending < 0: ", pending]);
+      }
       // Compress the error from any result to the first argument
       if (arguments[0]) {
         results[0] = arguments[0];
       }
       // Send the other results as arguments
       results[index] = arguments[1];
-      if (!lock) { check(); }
+      if (!lock) { 
+        check(); 
+        fired_by_callback = true;
+      }
     };
   };
 

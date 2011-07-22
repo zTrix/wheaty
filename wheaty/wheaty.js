@@ -27,7 +27,8 @@ var Url = require('url'),
     Git = require('./git-fs'),
     Path = require('path'),
     Config = require('./config'),
-    Renderers = require('./renderers');
+    Renderers = require('./renderers'),
+    Z = require('./zlog');
 
 var routes = [];
 
@@ -38,12 +39,18 @@ function addRoute(regex, renderer) {
 function handleRoute(req, res, renderer, match) {
   function callback(err, data) {
     if (err) {
-      return err.errno === process.ENOENT
-        ? res.writeHead(404)
-        : res.writeHead(500);
+      res.writeHead(err.errno === process.ENOENT ? 404 : 500);
+      res.write(err.stack);
+      return;
     }
-    res.writeHead(200, data.headers);
-    res.end(data.buffer);
+    if (!data) {
+      res.writeHead(500);
+      res.write('Internal error, data is null');
+    } else {
+      res.writeHead(200, data.headers);
+      res.write(data.buffer);
+    }
+    res.end();
   }
   renderer.apply(null, match.concat([callback]));
 }
@@ -78,30 +85,37 @@ module.exports = function setup(repo, config) {
 
 
   return function handle(req, res) {
-    var url = Url.parse(req.url);
-    for (var i = 0, l = routes.length; i < l; i++) {
-      var route = routes[i];
-      var match = url.pathname.match(route.regex);
-      if (match) {
-        match = Array.prototype.slice.call(match, 1);
-        if (match[0] === '') {
-          // Resolve head to a sha if unspecified
-          Git.getHead(function (err, sha) {
-            if (err) {
-                throw err; 
-            }
-            match[0] = sha;
+    try {
+      var url = Url.parse(req.url);
+      Z.info(url.pathname);
+      for (var i = 0, l = routes.length; i < l; i++) {
+        var route = routes[i];
+        var match = url.pathname.match(route.regex);
+        if (match) {
+          match = Array.prototype.slice.call(match, 1);
+          if (match[0] === '') {
+            // Resolve head to a sha if unspecified
+            Git.getHead(function (err, sha) {
+              if (err) {
+                  throw err; 
+              }
+              match[0] = sha;
+              handleRoute(req, res, route.renderer, match);
+            });
+          } else {
             handleRoute(req, res, route.renderer, match);
-          });
-        } else {
-          handleRoute(req, res, route.renderer, match);
+          }
+          return;
         }
-        return;
       }
+      // TODO need careful handling later
+      res.writeHead(404);
+      res.write('not found');
+      res.end();
+    } catch (err) {
+      res.writeHead(500);
+      res.write(err.stack);
+      res.end();
     }
-    // TODO need careful handling later
-    res.writeHead(404);
-    res.write('not found');
-    res.end();
   }
 };
