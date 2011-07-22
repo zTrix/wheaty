@@ -8,7 +8,8 @@ var Git = require('./git-fs'),
     MD5 = require('./md5'),
     ChildProcess = require('child_process'),
     getMime = require('./simple-mime')('application/octet-string'),
-    Step = require('./step');
+    Step = require('./step'),
+    Z = require('./zlog');
 
 // Execute a child process, feed it a buffer and get a new buffer filtered.
 function execPipe(command, args, data, callback) {
@@ -175,7 +176,11 @@ var Renderers = module.exports = {
         Data.fullArticle(version, name, this.parallel());
       },
       function (err, head, props) {
-        if (err) { callback(err); return; }
+        if (err) {
+          Z.err(err.stack);
+          callback(err); 
+          return; 
+        }
         article = props;
         insertSnippets(article.markdown, article.snippets, this.parallel());
         Git.readFile(head, Config.description_file, Config.encoding, this.parallel());
@@ -192,7 +197,11 @@ var Renderers = module.exports = {
         }, this);
       },
       function finish(err, buffer) {
-        if (err) { callback(err); return; }
+        if (err) { 
+          Z.err(err.toString());
+          callback(err); 
+          return; 
+        }
         postProcess({
           "Cache-Control": "public, max-age=3600"
         }, buffer, version, name, this);

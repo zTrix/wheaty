@@ -22,7 +22,8 @@ SOFTWARE.
 
 var ChildProcess = require('child_process'),
     Path = require('path'),
-    fs = require('fs');
+    fs = require('fs'),
+    Z = require('./zlog');
 
 // Keep stable stuff in memory 1 hour (in ms), 100ms for volatile stuff.
 var CACHE_LIFE = [36300000, 100];
@@ -124,17 +125,27 @@ function getHeadSha(callback) {
 
   var head, packedRefs, master;
   fs.readFile(Path.join(gitDir, "packed-refs"), "ascii", function (err, result) {
-    if (err) { groupCallback(err); return; }
+    if (err) {
+      Z.warn(err);
+      return; 
+    }
     packedRefs = result;
     checkDone();
   });
   fs.readFile(Path.join(gitDir, "HEAD"), "ascii", function (err, result) {
-    if (err) { groupCallback(err); return; }
+    if (err) { 
+      groupCallback(err); 
+      return; 
+    }
     try {
       head = result.match(/^ref: (.*)\n$/)[1]
-    } catch (err) { groupCallback(err); return; }
+    } catch (err) {
+      Z.err(err);
+      groupCallback(err); 
+      return; 
+    }
     fs.readFile(Path.join(gitDir, head), "ascii", function (err, result) {
-      master = result || null;
+      master = result;
       checkDone();
     });
     checkDone();
@@ -143,15 +154,21 @@ function getHeadSha(callback) {
   // When they're both done, parse out the sha and return it.
   function checkDone() {
     // Make sure all files have been read
-    if (!(head && packedRefs && typeof master !== 'undefined')) { return; }
+    if (!(head && (master || packedRefs))) {
+      return; 
+    }
     // Parse the sha1 out of the files.
     try {
       if (master) {
         shaCache = master.match(/([a-f0-9]{40})\n/)[1];
       } else {
-        shaCache = packedRefs.match(
+        var _match = packedRefs.match(
           new RegExp("([a-f0-9]{40}) " + head)
-        )[1];
+        );
+        if (!_match) {
+          return;
+        }
+        shaCache = _match[1];
       }
     } catch (err) { groupCallback(err); return; }
 

@@ -251,7 +251,7 @@ var Data = module.exports = {
         if (err) { callback(err); return; }
         article = props;
         Data.articles(version, this.parallel());
-        Git.log("articles/" + name + ".markdown", this.parallel());
+        Git.log(Path.join(Config.article_dir, name + ".markdown"), this.parallel());
         var canExecute = article.node && ("v" + process.version).indexOf(article.node) >= 0
         canExecute = true;
         activateSnippets(version, article.snippets, canExecute, this.parallel());
