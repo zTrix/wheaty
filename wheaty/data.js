@@ -4,7 +4,8 @@ var Git = require('./git-fs'),
     Config = require('./config'),
     util = require(process.binding('natives').util ? 'util' : 'sys'),
     Script = process.binding('evals').Script,
-    QueryString = require('querystring');
+    QueryString = require('querystring'),
+    Z = require('./zlog');
 
 function preProcessMarkdown(markdown) {
   if (!(typeof markdown === 'string')) {
@@ -251,8 +252,14 @@ var Data = module.exports = {
         if (err) { callback(err); return; }
         article = props;
         Data.articles(version, this.parallel());
-        Git.log(Path.join(Config.article_dir, name + ".markdown"), this.parallel());
-        var canExecute = article.node && ("v" + process.version).indexOf(article.node) >= 0
+        var p = this.parallel();
+        Git.log(Path.join(Config.article_dir, name + ".markdown"), function(err, data) {
+            if (err) {
+                Z.warn(err);
+            }
+            p(null, data);
+        });
+        var canExecute = article.node && ("v" + process.version).indexOf(article.node) >= 0;
         canExecute = true;
         activateSnippets(version, article.snippets, canExecute, this.parallel());
       },
@@ -261,7 +268,7 @@ var Data = module.exports = {
         if (err) { callback(err); return; }
         article.log = log;
         article.snippets = snippets;
-        if (Object.keys(log).length > 0) {
+        if (log && Object.keys(log).length > 0) {
           article.lastUpdated = log[Object.keys(log)[0]].date;
         }
 

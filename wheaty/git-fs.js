@@ -43,8 +43,8 @@ var Git = module.exports = function (repo) {
   try {
     // Check is this is a working repo
     gitDir = Path.join(repo, ".git")
-    fs.statSync(gitDir);
     workTree = repo;
+    fs.statSync(gitDir);
     gitCommands = ["--git-dir=" + gitDir, "--work-tree=" + workTree];
   } catch (e) {
     gitDir = repo;
@@ -332,7 +332,10 @@ Git.readDir = safe(function readDir(version, path, callback) {
 // newest version in the repository.  For working trees, this is the actual
 // files on the HD, for bare repos this is the HEAD revision.
 Git.getHead = function getHead(callback, forceHead) {
-  if (workTree && !forceHead) { callback(null, 'fs'); return };
+  if (workTree && !forceHead) { 
+    callback(null, 'fs'); 
+    return;
+  };
   getHeadSha(callback);
 }
 

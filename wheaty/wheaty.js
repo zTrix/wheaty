@@ -41,6 +41,7 @@ function handleRoute(req, res, renderer, match) {
     if (err) {
       res.writeHead(err.errno === process.ENOENT ? 404 : 500);
       res.write(err.stack);
+      res.end();
       return;
     }
     if (!data) {
@@ -97,9 +98,10 @@ module.exports = function setup(repo, config) {
             // Resolve head to a sha if unspecified
             Git.getHead(function (err, sha) {
               if (err) {
-                  throw err; 
+                match[0] = 'fs';
+              } else {
+                match[0] = sha;
               }
-              match[0] = sha;
               handleRoute(req, res, route.renderer, match);
             });
           } else {

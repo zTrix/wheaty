@@ -26,7 +26,7 @@ SOFTWARE.
 // modified to fit my taste and the node.JS error handling system.
 function Step() {
   var steps = Array.prototype.slice.call(arguments),
-      pending, counter, results, lock;
+      pending, counter, results, lock, fired;
 
   // Define the main callback that's given as `this` to the steps.
   function next() {
@@ -64,26 +64,28 @@ function Step() {
 
   // Add a special callback generator `this.parallel()` that groups stuff.
   next.parallel = function () {
-    var index = ++counter;
+    if (!counter) {
+      fired = false;
+    }
+    var index = 1 + counter++;
     pending++;
-    var fired_by_callback = false;
 
-    function check(who) {
+    function check(caller) {
       if (pending === 0) {
-        if (who && fired_by_callback) return;
         // When they're all done, call the callback
+        if (caller && fired) {
+          return;
+        }
         next.apply(null, results);
       }
     }
     process.nextTick(function() {
-        check('nextTick');
+      check('nextTick');
+      fired = true;
     }); // Ensures that check is called at least once
 
     return function () {
       pending--;
-      if (pending < 0) {
-        Z.err(["pending < 0: ", pending]);
-      }
       // Compress the error from any result to the first argument
       if (arguments[0]) {
         results[0] = arguments[0];
@@ -91,8 +93,8 @@ function Step() {
       // Send the other results as arguments
       results[index] = arguments[1];
       if (!lock) { 
-        check(); 
-        fired_by_callback = true;
+        check();
+        fired = true;
       }
     };
   };
