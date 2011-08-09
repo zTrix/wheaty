@@ -250,17 +250,23 @@ var Renderers = module.exports = {
   }),
 
   staticFile: Git.safe(function staticFile(version, path, callback) {
-    var st = fs.statSync(Path.join(Config.skin_dir, "public", path));
-    var etag = MD5.md5(version + ':' + path + ':' + st.size + ':' + st.mtime);
-    if (this.headers['if-none-match'] === etag) {
-      callback(null, {
-        headers: {
-          'Date': new Date().toUTCString(),
-          'Server': ServerName
-        },
-        buffer: ''
-      }, 304);
-      return;
+    var etag;
+    try {
+      var st = fs.statSync(Path.join(Config.skin_dir, "public", path));
+      etag = MD5.md5(version + ':' + path + ':' + st.size + ':' + st.mtime);
+      if (this.headers['if-none-match'] === etag) {
+        callback(null, {
+          headers: {
+            'Date': new Date().toUTCString(),
+            'Server': ServerName
+          },
+          buffer: ''
+        }, 304);
+        return;
+      }
+    } catch (e) {
+      Z.err(e);
+      etag = MD5.md5(version + ":" + path + ":" + new Date().toUTCString());
     }
     Step(
       function loadPublicFiles() {
