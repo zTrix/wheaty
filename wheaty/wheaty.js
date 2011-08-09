@@ -39,19 +39,23 @@ function addRoute(regex, renderer) {
 function handleRoute(req, res, renderer, match) {
   function callback(err, data, response_code) {
     if (err) {
-      res.writeHead(err.errno === process.ENOENT ? 404 : 500);
+      var code = err.errno === process.ENOENT ? 404 : 500;
+      Z.info(req.url + ' [ ' + code + ' ]');
+      res.writeHead(code);
       res.write(err.stack);
       res.end();
       return;
     }
     if (!data) {
       res.writeHead(500);
+      Z.info(req.url + ' [ 500 ]');
       res.write('Internal error, data is null');
     } else {
       if (!response_code) {
         response_code = 200;
       }
       res.writeHead(response_code, data.headers);
+      Z.info(req.url + ' [ ' + response_code + ' ]');
       if (response_code == 200) {
         res.write(data.buffer);
       }
@@ -93,7 +97,6 @@ module.exports = function setup(repo, config) {
   return function handle(req, res) {
     try {
       var url = Url.parse(req.url);
-      Z.info(url.pathname);
       for (var i = 0, l = routes.length; i < l; i++) {
         var route = routes[i];
         var match = url.pathname.match(route.regex);
