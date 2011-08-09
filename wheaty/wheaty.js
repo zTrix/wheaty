@@ -66,6 +66,10 @@ function handleRoute(req, res, renderer, match) {
 }
 
 module.exports = function setup(repo, config) {
+  if (!repo) {
+    Z.err("no app root set in server.js");
+    return;
+  }
   
   for (var i in config) {
     Config[i] = config[i];
@@ -81,6 +85,7 @@ module.exports = function setup(repo, config) {
   */
 
   // Initialize the Git Filesystem
+  global.app_root = repo;
   Git(repo || process.cwd());
   // Set up our routes
   addRoute(/^\/()$/, Renderers.index);

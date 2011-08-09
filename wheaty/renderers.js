@@ -252,7 +252,7 @@ var Renderers = module.exports = {
   staticFile: Git.safe(function staticFile(version, path, callback) {
     var etag;
     try {
-      var st = fs.statSync(Path.join(Config.skin_dir, "public", path));
+      var st = fs.statSync(Path.join(app_root, Config.skin_dir, "public", path));
       etag = MD5.md5(version + ':' + path + ':' + st.size + ':' + st.mtime);
       if (this.headers['if-none-match'] === etag) {
         callback(null, {
