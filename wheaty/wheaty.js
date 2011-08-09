@@ -39,7 +39,7 @@ function addRoute(regex, renderer) {
 function handleRoute(req, res, renderer, match) {
   function callback(err, data, response_code) {
     if (err) {
-      var code = err.errno === process.ENOENT ? 404 : 500;
+      var code = err.code === 'ENOENT' ? 404 : 500;
       Z.info(req.url + ' [ ' + code + ' ]');
       res.writeHead(code);
       res.write(err.stack);
