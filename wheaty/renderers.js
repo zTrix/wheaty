@@ -9,7 +9,9 @@ var Git = require('./git-fs'),
     ChildProcess = require('child_process'),
     getMime = require('./simple-mime')('application/octet-string'),
     Step = require('./step'),
-    Z = require('./zlog');
+    Z = require('./zlog'),
+    fs = require('fs'),
+    ServerName = 'Wheaty on node.js';
 
 // Execute a child process, feed it a buffer and get a new buffer filtered.
 function execPipe(command, args, data, callback) {
@@ -57,12 +59,7 @@ function postProcess(headers, buffer, version, path, callback) {
       }
       var date = new Date().toUTCString();
       headers["Date"] = date;
-      headers["Server"] = "Wheaty on node.js";
-      if (version === 'fs') {
-        delete headers["Cache-Control"];
-      } else {
-        headers["ETag"] = MD5.md5(version + ":" + path + ":" + date);
-      }
+      headers["Server"] = ServerName;
 
       if (/html/.test(headers["Content-Type"])) {
         buffer = Tools.stringToBuffer((buffer+"").replace(/<pre><code>[^<]+<\/code><\/pre>/g,
@@ -126,7 +123,8 @@ var Renderers = module.exports = {
       function callPostProcess(err, buffer) {
         if (err) { callback(err); return; }
         postProcess({
-          "Cache-Control": "public, max-age=3600"
+          "Cache-Control": "public, max-age=600",
+          "ETag"         : MD5.md5(version + ":/:" + new Date().toUTCString())
         }, buffer, version, "index", this);
       },
       callback
@@ -160,8 +158,9 @@ var Renderers = module.exports = {
       function finish(err, buffer) {
         if (err) { callback(err); return; }
         postProcess({
-          "Content-Type":"application/rss+xml",
-          "Cache-Control": "public, max-age=3600"
+          "Content-Type" :"application/rss+xml",
+          "Cache-Control": "public, max-age=600",
+          "ETag"         : MD5.md5(version + ":feed.xml:" + new Date().toUTCString())
         }, buffer, version, "feed.xml", this);
       },
       callback
@@ -207,7 +206,8 @@ var Renderers = module.exports = {
           return;
         }
         postProcess({
-          "Cache-Control": "public, max-age=3600"
+          "Cache-Control": "public, max-age=600",
+          "ETag"         : MD5.md5(version + ":" + name + ":" + new Date().toUTCString())
         }, buffer, version, name, this);
       },
       callback
@@ -241,7 +241,8 @@ var Renderers = module.exports = {
       function callPostProcess(err, buffer) {
         if (err) { callback(err); return; }
         postProcess({
-          "Cache-Control": "public, max-age=3600"
+          "Cache-Control": "public, max-age=600",
+          "ETag"         : MD5.md5(version + ":" + 'index' + ":" + new Date().toUTCString())
         }, buffer, version, "index", this);
       },
       callback
@@ -249,6 +250,18 @@ var Renderers = module.exports = {
   }),
 
   staticFile: Git.safe(function staticFile(version, path, callback) {
+    var st = fs.statSync(Path.join(Config.skin_dir, "public", path));
+    var etag = MD5.md5(version + ':' + path + ':' + st.size + ':' + st.mtime);
+    if (this.headers['if-none-match'] === etag) {
+      callback(null, {
+        headers: {
+          'Date': new Date().toUTCString(),
+          'Server': ServerName
+        },
+        buffer: ''
+      }, 304);
+      return;
+    }
     Step(
       function loadPublicFiles() {
         Git.readFile(version, Path.join(Config.skin_dir, "public", path), this);
@@ -263,7 +276,8 @@ var Renderers = module.exports = {
         if (err) { callback(err); return; }
         var headers = {
           "Content-Type": getMime(path),
-          "Cache-Control": "public, max-age=32000000"
+          "Cache-Control": "public, max-age=3600",
+          "ETag": etag
         };
         var buffer = new Buffer(string.length);
         buffer.write(string, 'binary');
@@ -291,8 +305,9 @@ var Renderers = module.exports = {
       function finish(err, buffer) {
         if (err) { callback(err); return; }
         postProcess({
-          "Content-Type": "image/png",
-          "Cache-Control": "public, max-age=32000000"
+          "Content-Type" : "image/png",
+          "Cache-Control": "public, max-age=3600",
+          "ETag"         : MD5.md5(version + ":" + path + ":" + new Date().toUTCString())
         }, buffer, version, path, this);
       },
       callback

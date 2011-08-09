@@ -37,7 +37,7 @@ function addRoute(regex, renderer) {
 }
 
 function handleRoute(req, res, renderer, match) {
-  function callback(err, data) {
+  function callback(err, data, response_code) {
     if (err) {
       res.writeHead(err.errno === process.ENOENT ? 404 : 500);
       res.write(err.stack);
@@ -48,12 +48,17 @@ function handleRoute(req, res, renderer, match) {
       res.writeHead(500);
       res.write('Internal error, data is null');
     } else {
-      res.writeHead(200, data.headers);
-      res.write(data.buffer);
+      if (!response_code) {
+        response_code = 200;
+      }
+      res.writeHead(response_code, data.headers);
+      if (response_code == 200) {
+        res.write(data.buffer);
+      }
     }
     res.end();
   }
-  renderer.apply(null, match.concat([callback]));
+  renderer.apply(req, match.concat([callback]));
 }
 
 module.exports = function setup(repo, config) {
