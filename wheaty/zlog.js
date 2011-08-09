@@ -14,6 +14,11 @@ function getPos() {
         throw new Error();
     } catch(e) {
         var pos = e.stack.split('\n')[4].split(':');
+        pos[0] = pos[0].trim();
+        var lp = pos[0].lastIndexOf(' (');
+        if (lp > -1) {
+            pos[0] = pos[0].substr(lp + 2);
+        }
         var left = pos[0].indexOf(cwd);
         if (left > 0) {
             pos[0] = pos[0].substr(left);
@@ -32,7 +37,7 @@ function log(msg, type, color) {
         color = color + 'm';
     }
     console.log(
-        getTime() + ' [' + head + color + type + foot + '] [' + head + tag + getPos() + foot + ' ]', msg
+        getTime() + ' [' + head + color + type + foot + '] [' + head + tag + getPos() + foot + ']', msg
     );
 }
 
