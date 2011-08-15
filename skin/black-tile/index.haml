@@ -7,7 +7,7 @@
       %p
         = intro(article.markdown)
       .comment-cnt
-        %a(href="http://#{config.base_url}/#{article.name}#disqus_thread" data-disqus-identifier="#{article.name}") comment
+        %a(href="http://#{config.blog_domain}/#{article.name}#disqus_thread" data-disqus-identifier="#{article.name}") comment
       .readmore
         %a{href: "/" + article.name} Read more...
 

@@ -1,10 +1,9 @@
 # About me
 ***
 
-![avatar](/img/ztrix.png)
+![avatar](/img/avatar.jpg)
 
-* CS&T undergraduate in THU
-* Interested in Javascript, python
-* 37signals follower
-* Taichi fan
+* Where do I come from?
+* Who am I ?
+* Where am I going ?
 

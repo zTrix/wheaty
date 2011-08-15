@@ -1,8 +1,8 @@
 %rss(version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom")
   %channel
     %title How To Node
-    %atom:link(href="http://#{config.base_url}/feed.xml" rel="self" type="application/rss+xml")
-    %link http://#{config.base_url}
+    %atom:link(href="http://#{config.blog_domain}/feed.xml" rel="self" type="application/rss+xml")
+    %link http://#{config.blog_domain}
     %description This is #{config.nickname}'s personal web blog
     %pubDate&= formatRFC822Date(new Date())
     %generator http://github.com/zTrix/wheaty
@@ -10,9 +10,9 @@
     :each article in articles
       %item
         %title&= article.title
-        %link&= "http://" + config.base_url + "/" + article.name
-        %comments&= "http://" + config.base_url + "/" + article.name + "#disqus_thread"
+        %link&= "http://" + config.blog_domain + "/" + article.name
+        %comments&= "http://" + config.blog_domain + "/" + article.name + "#disqus_thread"
         %pubDate&= formatRFC822Date(article.date)
-        %guid(isPermaLink="true")&= "http://" + config.base_url + "/" + article.name
+        %guid(isPermaLink="true")&= "http://" + config.blog_domain + "/" + article.name
         %description&= markdownEncode(article.markdown)
         %author&= article.author && (article.author.email + " (" + article.author.name + ")")
