@@ -19,7 +19,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 require.paths.unshift(__dirname);
 
 require('./proto');
@@ -33,45 +32,48 @@ var Url = require('url'),
 var routes = [];
 
 function addRoute(regex, renderer) {
-  routes.push({regex: regex, renderer: renderer});
+    routes.push({
+        regex: regex,
+        renderer: renderer
+    });
 }
 
 function handleRoute(req, res, renderer, match) {
-  function callback(err, data, response_code) {
-    if (err) {
-      var code = err.code === 'ENOENT' ? 404 : 500;
-      Renderers.errorHandle.apply(req, [code, '' + err, callback]);
-      return;
+    function callback(err, data, response_code) {
+        if (err) {
+            var code = err.code === 'ENOENT' ? 404 : 500;
+            Renderers.errorHandle.apply(req, [code, '' + err, callback]);
+            return;
+        }
+        if (!data) {
+            res.writeHead(500);
+            Z.info(req.url + ' [ 500 ]');
+            res.write('Internal error, data is null');
+        } else {
+            if (!response_code) {
+                response_code = 200;
+            }
+            res.writeHead(response_code, data.headers);
+            Z.info(req.url + ' [ ' + response_code + ' ]');
+            if (data.buffer) {
+                res.write(data.buffer);
+            }
+        }
+        res.end();
     }
-    if (!data) {
-      res.writeHead(500);
-      Z.info(req.url + ' [ 500 ]');
-      res.write('Internal error, data is null');
-    } else {
-      if (!response_code) {
-        response_code = 200;
-      }
-      res.writeHead(response_code, data.headers);
-      Z.info(req.url + ' [ ' + response_code + ' ]');
-      if (data.buffer) {
-        res.write(data.buffer);
-      }
-    }
-    res.end();
-  }
-  renderer.apply(req, match.concat([callback]));
+    renderer.apply(req, match.concat([callback]));
 }
 
 module.exports = function setup(repo, config) {
-  if (!repo) {
-    Z.err("no app root set in server.js");
-    return;
-  }
-  
-  for (var i in config) {
-    Config[i] = config[i];
-  }
-  /*
+    if (!repo) {
+        Z.err("no app root set in server.js");
+        return;
+    }
+
+    for (var i in config) {
+        Config[i] = config[i];
+    }
+/*
   // if we want to lookup the skin dir relative to wheaty dir
   // use the code below
   Config['skin_dir'] = Path.normalize(Path.join(
@@ -81,53 +83,54 @@ module.exports = function setup(repo, config) {
   ));
   */
 
-  // Initialize the Git Filesystem
-  global.app_root = repo;
-  Git(repo || process.cwd());
-  // Set up our routes
-  addRoute(/^\/()$/, Renderers.index);
-  addRoute(/^\/()feed.xml$/, Renderers.feed);
-  addRoute(/^\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
-  addRoute(/^\/([a-f0-9]{40})\/(.+\.dot)$/, Renderers.dotFile);
-  addRoute(/^\/([a-f0-9]{40})\/(.+\.[a-z]{2,4})$/, Renderers.staticFile);
-  addRoute(/^\/()([a-z0-9_-]+)$/, Renderers.article);
-  addRoute(/^\/()(.+\.dot)$/, Renderers.dotFile);
-  addRoute(/^\/()(.+\.[a-z]{2,4})$/, Renderers.staticFile);
-  addRoute(/^\/()category\/([\%\.a-z0-9_-]+)$/,  Renderers.categoryIndex);
+    // Initialize the Git Filesystem
+    global.app_root = repo;
+    Git(repo || process.cwd());
+    // Set up our routes
+    addRoute(/^\/()$/, Renderers.index);
+    addRoute(/^\/()feed.xml$/, Renderers.feed);
+    addRoute(/^\/([a-f0-9]{40})\/([a-z0-9_-]+)$/, Renderers.article);
+    addRoute(/^\/([a-f0-9]{40})\/(.+\.dot)$/, Renderers.dotFile);
+    addRoute(/^\/([a-f0-9]{40})\/(.+\.[a-z]{2,4})$/, Renderers.staticFile);
+    addRoute(/^\/()([a-z0-9_-]+)$/, Renderers.article);
+    addRoute(/^\/()(.+\.dot)$/, Renderers.dotFile);
+    addRoute(/^\/()(.+\.[a-z]{2,4})$/, Renderers.staticFile);
+    addRoute(/^\/()category\/([\%\.a-z0-9_-]+)$/, Renderers.categoryIndex);
 
 
-  return function handle(req, res) {
-    try {
-      var url = Url.parse(req.url);
-      for (var i = 0, l = routes.length; i < l; i++) {
-        var route = routes[i];
-        var match = url.pathname.match(route.regex);
-        if (match) {
-          match = Array.prototype.slice.call(match, 1);
-          if (match[0] === '') {
-            // Resolve head to a sha if unspecified
-            Git.getHead(function (err, sha) {
-              if (err) {
-                match[0] = 'fs';
-              } else {
-                match[0] = sha;
-              }
-              handleRoute(req, res, route.renderer, match);
-            });
-          } else {
-            handleRoute(req, res, route.renderer, match);
-          }
-          return;
+    return function handle(req, res) {
+        try {
+            var url = Url.parse(req.url);
+            for (var i = 0, l = routes.length; i < l; i++) {
+                var route = routes[i];
+                var match = url.pathname.match(route.regex);
+                if (match) {
+                    match = Array.prototype.slice.call(match, 1);
+                    if (match[0] === '') {
+                        // Resolve head to a sha if unspecified
+                        Git.getHead(function (err, sha) {
+                            if (err) {
+                                match[0] = 'fs';
+                            } else {
+                                match[0] = sha;
+                            }
+                            handleRoute(req, res, route.renderer, match);
+                        });
+                    } else {
+                        handleRoute(req, res, route.renderer, match);
+                    }
+                    return;
+                }
+            }
+            // TODO need careful handling later
+            res.writeHead(404);
+            res.write('not found');
+            res.end();
+        } catch (err) {
+            res.writeHead(500);
+            res.write(err.stack);
+            res.end();
         }
-      }
-      // TODO need careful handling later
-      res.writeHead(404);
-      res.write('not found');
-      res.end();
-    } catch (err) {
-      res.writeHead(500);
-      res.write(err.stack);
-      res.end();
     }
-  }
 };
+
