@@ -130,3 +130,17 @@ body {
 #footer a.cc {
     margin-left: 5px;
 }
+
+#err {
+    text-decoration: none;
+    font-weight: bold;
+    color: #b5b5b5;
+}
+
+#err .code {
+    font-size: 240px;
+}
+
+#err .desc {
+    font-size: 74px;
+}

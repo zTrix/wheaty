@@ -320,7 +320,35 @@ var Renderers = module.exports = {
     );
   }),
 
-  errorHandle: Git.safe(function(version, err) {
-    
-  })
+  errorHandle: function(error_code, error_msg, callback) {
+    Step(
+      function loadTemplate() {
+        Tools.render("error", {
+          http_code: error_code,
+          error_desc: error_code == 404 ? 'Not Found' : 'Internal Server Error',
+          error_msg: error_msg,
+          config: Config
+        }, this, true);
+      },
+
+      function finish(err, data) {
+        if (err) {
+          callback(null, {
+            headers: {},
+            buffer: 'error occurred when generating ' + error_code + ' page. original error code is :' + error_msg
+          }, 500);
+          return;
+        }
+        callback(null, {
+          headers: {
+            "Date"        : new Date().toUTCString(),
+            "Server"      : ServerName,
+            "Content-Type": "text/html; charset=" + Config.encoding,
+            "Content-Length" : data.length
+          },
+          buffer: data
+        }, error_code);
+      }
+    );
+  }
 }

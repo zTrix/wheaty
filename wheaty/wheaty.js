@@ -40,10 +40,7 @@ function handleRoute(req, res, renderer, match) {
   function callback(err, data, response_code) {
     if (err) {
       var code = err.code === 'ENOENT' ? 404 : 500;
-      Z.info(req.url + ' [ ' + code + ' ]');
-      res.writeHead(code);
-      res.write(err.stack);
-      res.end();
+      Renderers.errorHandle.apply(req, [code, '' + err, callback]);
       return;
     }
     if (!data) {
@@ -56,7 +53,7 @@ function handleRoute(req, res, renderer, match) {
       }
       res.writeHead(response_code, data.headers);
       Z.info(req.url + ' [ ' + response_code + ' ]');
-      if (response_code == 200) {
+      if (data.buffer) {
         res.write(data.buffer);
       }
     }
