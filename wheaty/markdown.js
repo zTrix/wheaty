@@ -1298,6 +1298,7 @@ exports.main = function (system) {
     }
 };
 
-if (require.main == module.id)
+if (require.main == module.id) {
     exports.main(system);
+}
 
