@@ -311,7 +311,7 @@ var Renderers = module.exports = {
     staticFile: Git.safe(function staticFile(version, path, callback) {
         var etag;
         try {
-            var st = fs.statSync(Path.join(Config.app_root, Config.skin_dir, "public", path));
+            var st = fs.statSync(Path.join(Config.app_root, Config.skin_dir, Config.theme, "public", path));
             etag = MD5.md5(version + ':' + path + ':' + st.size + ':' + st.mtime);
             if (this.headers['if-none-match'] === etag) {
                 callback(null, {
@@ -330,7 +330,7 @@ var Renderers = module.exports = {
         Step(
 
             function loadPublicFiles() {
-                Git.readFile(version, Path.join(Config.skin_dir, "public", path), this);
+                Git.readFile(version, Path.join(Config.skin_dir, Config.theme, "public", path), this);
             }, 
             
             function loadArticleFiles(err, data) {
@@ -363,7 +363,7 @@ var Renderers = module.exports = {
         Step(
 
             function loadPublicFiles() {
-                Git.readFile(version, Path.join(Config.skin_dir, "public", path), this);
+                Git.readFile(version, Path.join(Config.skin_dir, Config.theme, "public", path), this);
             }, 
             
             function loadArticleFiles(err, data) {

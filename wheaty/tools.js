@@ -148,7 +148,7 @@ function stringToBuffer(string) {
 var loadTemplate = Git.safe(function loadTemplate(version, name, callback) {
     Step(
         function loadHaml() {
-            Git.readFile(version, Path.join(Config.skin_dir, name + ".haml"), this);
+            Git.readFile(version, Path.join(Config.skin_dir, Config.theme, name + ".haml"), this);
         }, 
         
         function compileTemplate(err, haml) {
