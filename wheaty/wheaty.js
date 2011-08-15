@@ -25,7 +25,6 @@ require('./proto');
 var Url = require('url'),
     Git = require('./git-fs'),
     Path = require('path'),
-    Config = require('./config'),
     Renderers = require('./renderers'),
     Z = require('./zlog');
 
@@ -70,6 +69,16 @@ module.exports = function setup(repo, config) {
         return;
     }
 
+    global.Config = {
+        wheaty_dir: __dirname,
+        skin_dir: 'skin',
+        encoding: 'utf-8',
+        article_dir: 'articles',
+        author_dir: 'authors',
+        description_file: 'description.markdown',
+        app_root: repo
+    };
+
     for (var i in config) {
         Config[i] = config[i];
     }
@@ -84,7 +93,6 @@ module.exports = function setup(repo, config) {
   */
 
     // Initialize the Git Filesystem
-    global.app_root = repo;
     Git(repo || process.cwd());
     // Set up our routes
     addRoute(/^\/()$/, Renderers.index);

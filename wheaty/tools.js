@@ -1,7 +1,6 @@
 var Step = require('./step'),
     Haml = require('./haml'),
     Path = require('path'),
-    Config = require('./config'),
     Markdown = require('./markdown'),
     MD5 = require('./md5'),
     Buffer = require('buffer').Buffer,
