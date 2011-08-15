@@ -13,10 +13,13 @@ var config = {
     // blog base url
     base_url: 'blog.ztrix.me',
 
-    // theme css
-    // you can write your own css file in skin/public/css/ 
-    // and set the below option to your own css file
-    theme_css: 'default.css',
+    // skin dir which contains haml, css, javascript, img
+    skin_dir: 'skin',
+
+    // theme folder under skin dir
+    // you can write your own theme, and put it in a folder
+    // then set the theme option to your theme folder name
+    theme: 'black-tile',
 
     // this is the short name provided by disqus.com
     // If you do not have, go and register one for your blog
@@ -29,9 +32,6 @@ var config = {
     // authors dir, you should not change this if you are running
     // a personal blog
     author_dir: 'authors',
-
-    // skin dir which contains haml, css, javascript, img
-    skin_dir: 'skin',
 
     // This is the description file in which you describe your blog
     // or introduce yourself

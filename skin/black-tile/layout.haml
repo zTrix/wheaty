@@ -2,22 +2,24 @@
 %html(lang="en" xmlns="http://www.w3.org/1999/xhtml")
   %head
     %meta(http-equiv="content-type" content="text/html; charset=#{config.encoding}")
-    %title #{http_code} #{error_desc}
+    %title #{(title ? title + " - " : "")}Blog of #{config.nickname}
     %meta(name="description" content="personal blog, #{config.nickname}")
-    %link(href="/css/reset.css" rel="stylesheet")
-    %link(href="/css/#{config.theme_css}" rel="stylesheet")
+    %link(href="/css/all.css" rel="stylesheet")
     %link(rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/feed.xml")
     %link(href="/favicon.ico" rel="icon" type="image/x-icon")
   %body
     #container
-      %a#err(href="/")
-        %center
-          %p.code #{http_code}
-        %center
-          %p.desc #{error_desc}
-    #error_msg
-      <!-- error_msg: #{error_msg} -->
+      #header
+        %a{href: "/"}
+          %h1
+            #{config.nickname}'s Blog
+      = content
       
+      #footer
+        %p Site Design and Code is &copy; 2011 to zTrix under MIT license. 
+        %p Articles are copyrighted to #{config.nickname} under  
+          %a.cc{href: "http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en"} Creative Commons. 
+        %p Wheaty running on node #{process.version}
     :if config.ga_account
       :script
         var _gaq = _gaq || [];
