@@ -21,146 +21,152 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 // Inspired by http://github.com/willconant/flow-js, but reimplemented and
 // modified to fit my taste and the node.JS error handling system.
+
+// modified by zTrix
+// see this: https://github.com/creationix/step/pull/20
+
+
 function Step() {
-  var steps = Array.prototype.slice.call(arguments),
-      pending, counter, results, lock, fired;
+    var steps = Array.prototype.slice.call(arguments),
+        pending, counter, results, lock, fired;
 
-  // Define the main callback that's given as `this` to the steps.
-  function next() {
-
-    // Check if there are no steps left
-    if (steps.length === 0) {
-      // Throw uncaught errors
-      if (arguments[0]) {
-        throw arguments[0];
-      }
-      return;
-    }
-
-    // Get the next step to execute
-    var fn = steps.shift();
-    counter = pending = 0;
-    results = [];
-
-    // Run the step in a try..catch block so exceptions don't get out of hand.
-    try {
-      lock = true;
-      var result = fn.apply(next, arguments);
-    } catch (e) {
-      // Pass any exceptions on through the next callback
-      next(e);
-    }
+    // Define the main callback that's given as `this` to the steps.
 
 
-    // If a syncronous return is used, pass it to the callback
-    if (result !== undefined) {
-      next(undefined, result);
-    }
-    lock = false;
-  }
+    function next() {
 
-  // Add a special callback generator `this.parallel()` that groups stuff.
-  next.parallel = function () {
-    if (!counter) {
-      fired = false;
-    }
-    var index = 1 + counter++;
-    pending++;
-
-    function check(caller) {
-      if (pending === 0) {
-        // When they're all done, call the callback
-        if (caller && fired) {
-          return;
+        // Check if there are no steps left
+        if (steps.length === 0) {
+            // Throw uncaught errors
+            if (arguments[0]) {
+                throw arguments[0];
+            }
+            return;
         }
-        next.apply(null, results);
-      }
-    }
-    process.nextTick(function() {
-      check('nextTick');
-      fired = true;
-    }); // Ensures that check is called at least once
 
-    return function () {
-      pending--;
-      // Compress the error from any result to the first argument
-      if (arguments[0]) {
-        results[0] = arguments[0];
-      }
-      // Send the other results as arguments
-      results[index] = arguments[1];
-      if (!lock) { 
-        check();
-        fired = true;
-      }
-    };
-  };
+        // Get the next step to execute
+        var fn = steps.shift();
+        counter = pending = 0;
+        results = [];
 
-  // Generates a callback generator for grouped results
-  next.group = function () {
-    var localCallback = next.parallel();
-    var counter = 0;
-    var pending = 0;
-    var result = [];
-    var error = undefined;
-
-    function check() {
-      if (pending === 0) {
-        // When group is done, call the callback
-        localCallback(error, result);
-      }
-    }
-    process.nextTick(check); // Ensures that check is called at least once
-
-    // Generates a callback for the group
-    return function () {
-      var index = counter++;
-      pending++;
-      return function () {
-        pending--;
-        // Compress the error from any result to the first argument
-        if (arguments[0]) {
-          error = arguments[0];
+        // Run the step in a try..catch block so exceptions don't get out of hand.
+        try {
+            lock = true;
+            var result = fn.apply(next, arguments);
+        } catch (e) {
+            // Pass any exceptions on through the next callback
+            next(e);
         }
-        // Send the other results as arguments
-        result[index] = arguments[1];
-        if (!lock) { check(); }
-      };
-    };
-  };
 
-  // Start the engine an pass nothing to the first step.
-  next();
+
+        // If a syncronous return is used, pass it to the callback
+        if (result !== undefined) {
+            next(undefined, result);
+        }
+        lock = false;
+    }
+
+    // Add a special callback generator `this.parallel()` that groups stuff.
+    next.parallel = function () {
+        if (!counter) {
+            fired = false;
+        }
+        var index = 1 + counter++;
+        pending++;
+
+        function check(caller) {
+            if (pending === 0) {
+                // When they're all done, call the callback
+                if (caller && fired) {
+                    return;
+                }
+                next.apply(null, results);
+            }
+        }
+        process.nextTick(function () {
+            check('nextTick');
+            fired = true;
+        }); // Ensures that check is called at least once
+        return function () {
+            pending--;
+            // Compress the error from any result to the first argument
+            if (arguments[0]) {
+                results[0] = arguments[0];
+            }
+            // Send the other results as arguments
+            results[index] = arguments[1];
+            if (!lock) {
+                check();
+                fired = true;
+            }
+        };
+    };
+
+    // Generates a callback generator for grouped results
+    next.group = function () {
+        var localCallback = next.parallel();
+        var counter = 0;
+        var pending = 0;
+        var result = [];
+        var error = undefined;
+
+        function check() {
+            if (pending === 0) {
+                // When group is done, call the callback
+                localCallback(error, result);
+            }
+        }
+        process.nextTick(check); // Ensures that check is called at least once
+        // Generates a callback for the group
+        return function () {
+            var index = counter++;
+            pending++;
+            return function () {
+                pending--;
+                // Compress the error from any result to the first argument
+                if (arguments[0]) {
+                    error = arguments[0];
+                }
+                // Send the other results as arguments
+                result[index] = arguments[1];
+                if (!lock) {
+                    check();
+                }
+            };
+        };
+    };
+
+    // Start the engine an pass nothing to the first step.
+    next();
 }
 
 // Tack on leading and tailing steps for input and output and return
 // the whole thing as a function.  Basically turns step calls into function
 // factories.
 Step.fn = function StepFn() {
-  var steps = Array.prototype.slice.call(arguments);
-  return function () {
-    var args = Array.prototype.slice.call(arguments);
+    var steps = Array.prototype.slice.call(arguments);
+    return function () {
+        var args = Array.prototype.slice.call(arguments);
 
-    // Insert a first step that primes the data stream
-    var toRun = [function () {
-      this.apply(null, args);
-    }].concat(steps);
+        // Insert a first step that primes the data stream
+        var toRun = [function () {
+            this.apply(null, args);
+        }].concat(steps);
 
-    // If the last arg is a function add it as a last step
-    if (typeof args[args.length-1] === 'function') {
-      toRun.push(args.pop());
+        // If the last arg is a function add it as a last step
+        if (typeof args[args.length - 1] === 'function') {
+            toRun.push(args.pop());
+        }
+
+
+        Step.apply(null, toRun);
     }
-
-
-    Step.apply(null, toRun);
-  }
 }
 
 
 // Hook into commonJS module systems
 if (typeof module !== 'undefined' && "exports" in module) {
-  module.exports = Step;
+    module.exports = Step;
 }
