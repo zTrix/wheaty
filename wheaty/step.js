@@ -1,7 +1,6 @@
 /*
-Copyright (c) 2011 Tim Caswell <tim@creationix.com>
-
-MIT License
+Copyright (c) 2011 Tim Caswell <tim@creationix.com>, 2011 zTrix <i@ztrix.me>
+Originally designed by Tim Caswell and Modified by zTrix.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
