@@ -2,6 +2,7 @@
   .article
     :if article.version
       %a.sha-version{ href: "/#{article.version}/#{article.name}" } Static Version
+    .date{title: article.date}&= formatDate(article.date, "%Y-%m-%d")
     %h1
       %a{href: "/" + article.name}&= article.title
     = markdownEncode(article.markdown)

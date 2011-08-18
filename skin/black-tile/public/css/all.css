@@ -1,11 +1,4 @@
-/*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
-*/
-html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
+p,body,div,pre,form,fieldset,legend,input,textarea,blockquote{margin:0;padding:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}caption,th{text-align:left;}
 
 .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
 
@@ -30,12 +23,11 @@ body {
     background: url(/img/bg.jpg) 50% 0 no-repeat;
     color: #333333;
     min-height: 600px;
-    padding: 0 10px;
 }
 
 #container {
     margin: 0px auto;
-    width: 830px;
+    width: 1030px;
 }
 
 #header {
@@ -43,17 +35,16 @@ body {
     color: white;
     font-size: 40px;
     font-family: Serial;
-    margin: 0 0 10px 15px;
+    margin: 0 0 10px 282px;
 }
 
 #header a {
-    color: white;
-    font-weight: bold;
+    color: #fff;
     text-decoration: none;
 }
 
 #main {
-    width: 560px;
+    width: 760px;
     float: left;
     min-height: 800px;
 }
@@ -68,12 +59,9 @@ body {
     border-radius: 10px;
     -webkit-border-radius: 10px;
     margin-top: 20px;
-    padding: 15px;
+    padding: 20px;
 }
 
-#main .article img {
-    max-width: 100%;
-}
 
 #main .intro .readmore {
     margin-top: 10px;
@@ -118,13 +106,13 @@ body {
     margin-bottom: 20px;
 }
 
-#sidebar #author ul {
-    list-style-position:inside;
+#sidebar dd ul {
+  padding: 0;
 }
 
-#sidebar #author li {
-    list-style: disc;
-    list-style-position:inside;
+#sidebar ul {
+  padding: 0 0 0 10px;
+  margin: 0;
 }
 
 #main #disqus_thread {
@@ -153,3 +141,16 @@ body {
 #err .desc {
     font-size: 74px;
 }
+
+.article p {
+    margin: 20px 0;
+}
+
+.article img {
+    max-width: 100%;
+}
+
+.article > h1:first-child {
+    margin-bottom: 15px;
+}
+

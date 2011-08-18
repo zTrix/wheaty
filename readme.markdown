@@ -24,13 +24,17 @@ And I hold that, if you call yourself a geek, and you are a git follower and mar
 ## FAQ
 * If you are testing code under local environment, and the disqus comment module won't load, try adding the following code in article.haml in the script
     var disqus_developer = 1;
+* The introduction paragraph in index page of each article is the content before the first `<h2>` tag
+* The date for you article can be any string recognisable by Javascript using `new Date(date)`
 
+## Help
+Please contact me([i@ztrix.me](mailto:i@ztrix.me)) if you need any help.
 
 ## License
 Wheaty is [licensed] under the [MIT License]
 
 ## Tags
- blog engine, node.js, git, markdown, geek, javascript
+ blog engine, node.js, git, markdown, Javascript
 
 [wheat]:https://github.com/creationix/wheat
 [wheaty]:https://github.com/zTrix/wheaty
