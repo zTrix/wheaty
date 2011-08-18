@@ -16,4 +16,4 @@
         %pubDate&= formatRFC822Date(article.date)
         %guid(isPermaLink="true")&= "http://" + config.blog_domain + "/" + article.name
         %description&= markdownEncode(article.markdown)
-        %author&= (article.author.name && (article.author.email + " (" + article.author.name + ")")) || config.nickname
+        %author&= (article.author.name && (article.author.email + " (" + article.author.name + ")")) || (config.email + " (" + config.nickname + ")")

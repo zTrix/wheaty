@@ -13,6 +13,9 @@ var config = {
     // Change it to your handle
     nickname: 'zTrix',
 
+    // Your email, used in RSS
+    email: 'i@ztrix.me',
+
     // The domain for your blog
     blog_domain: 'blog.ztrix.me',
 
