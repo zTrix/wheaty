@@ -43,6 +43,11 @@ body {
     text-decoration: none;
 }
 
+#header #feed {
+    width: 50px;
+    float: right;
+}
+
 #main {
     width: 760px;
     float: left;
