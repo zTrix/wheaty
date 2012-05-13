@@ -1,7 +1,7 @@
 var Step = require('./step'),
     Haml = require('./haml'),
     Path = require('path'),
-    Markdown = require('./markdown'),
+    Markdown = require('./showdown'),
     MD5 = require('./md5'),
     Buffer = require('buffer').Buffer,
     Git = require('./git-fs'),

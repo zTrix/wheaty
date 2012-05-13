@@ -51,15 +51,28 @@
 //
 //   var text = "Markdown *rocks*.";
 //
-//   var markdown = require("markdown");
-//   var html = markdown.encode(text);
+//   var converter = new Showdown.converter();
+//   var html = converter.makeHtml(text);
 //
-//   print(html);
+//   alert(html);
 //
 // Note: move the sample code to the bottom of this
 // file before uncommenting it.
 //
 
+
+//
+// Showdown namespace
+//
+var Showdown = {};
+
+//
+// converter
+//
+// Wraps all "globals" so that the only thing
+// exposed is makeHtml().
+//
+Showdown.converter = function() {
 
 //
 // Globals:
@@ -75,7 +88,7 @@ var g_html_blocks;
 var g_list_level = 0;
 
 
-exports.makeHtml = function(text) {
+this.makeHtml = function(text) {
 //
 // Main function. The order in which other subs are called here is
 // essential. Link and image substitutions need to happen before
@@ -1280,8 +1293,10 @@ var escapeCharacters_callback = function(wholeMatch,m1) {
 	return "~E"+charCodeToEscape+"E";
 }
 
+} // end of Showdown.converter
+
 exports.encode = exports.markdown = function (src) {
-   return exports.makeHtml(src);
+   return new Showdown.converter().makeHtml(src);
 };
 
 exports.main = function (system) {
