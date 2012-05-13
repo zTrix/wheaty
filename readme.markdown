@@ -33,6 +33,12 @@ Please contact me([i@ztrix.me](mailto:i@ztrix.me)) if you need any help.
 ## License
 Wheaty is [licensed] under the [MIT License]
 
+## Todo
+ - add highlight support
+ - fix comment 0 bug
+ - add markdown table support
+ - make default theme more beautiful
+
 ## Tags
  blog engine, node.js, git, markdown, Javascript
 
